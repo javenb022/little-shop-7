@@ -24,7 +24,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_04_220632) do
   create_table "invoice_items", force: :cascade do |t|
     t.integer "quantity"
     t.integer "unit_price"
-    t.string "status"
+    t.integer "status"
     t.string "created_at"
     t.string "updated_at"
     t.bigint "item_id", null: false
@@ -48,7 +48,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_04_220632) do
     t.string "created_at"
     t.string "updated_at"
     t.bigint "merchant_id", null: false
-    t.integer "status"
+    t.integer "status", default: 1
     t.index ["merchant_id"], name: "index_items_on_merchant_id"
   end
 

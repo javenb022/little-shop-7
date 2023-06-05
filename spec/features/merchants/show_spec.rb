@@ -27,11 +27,11 @@ RSpec.describe "/merchants/:id/dashboard" do
       let!(:invoice_4) { create(:invoice, customer_id: customer_4.id, status: 0)}
       let!(:invoice_5) { create(:invoice, customer_id: customer_5.id, status: 0)}
 
-      let!(:invoice_item_1) { create(:invoice_item, unit_price: 2000, invoice_id: invoice_1.id, item_id: item_1.id) }
-      let!(:invoice_item_2) { create(:invoice_item, unit_price: 3000, invoice_id: invoice_2.id, item_id: item_2.id) }
-      let!(:invoice_item_3) { create(:invoice_item, unit_price: 4000, invoice_id: invoice_3.id, item_id: item_3.id) }
-      let!(:invoice_item_4) { create(:invoice_item, unit_price: 5000, invoice_id: invoice_4.id, item_id: item_4.id) }
-      let!(:invoice_item_5) { create(:invoice_item, unit_price: 5000, invoice_id: invoice_5.id, item_id: item_5.id) }
+      let!(:invoice_item_1) { create(:invoice_item, unit_price: 2000, status: 2, invoice_id: invoice_1.id, item_id: item_1.id) }
+      let!(:invoice_item_2) { create(:invoice_item, unit_price: 3000, status: 2, invoice_id: invoice_2.id, item_id: item_2.id) }
+      let!(:invoice_item_3) { create(:invoice_item, unit_price: 4000, status: 2, invoice_id: invoice_3.id, item_id: item_3.id) }
+      let!(:invoice_item_4) { create(:invoice_item, unit_price: 5000, status: 1, invoice_id: invoice_4.id, item_id: item_4.id) }
+      let!(:invoice_item_5) { create(:invoice_item, unit_price: 5000, status: 1, invoice_id: invoice_5.id, item_id: item_5.id) }
 
       let!(:customer_1) { create(:customer) }
       let!(:customer_2) { create(:customer) }
@@ -90,6 +90,30 @@ RSpec.describe "/merchants/:id/dashboard" do
         expect(page).to have_content(customer_5.first_name)
         expect(page).not_to have_content(customer_6.first_name)
         expect(page).not_to have_content(customer_7.first_name)
+      end
+
+
+        #         4. Merchant Dashboard Items Ready to Ship.
+        # As a merchant
+        # When I visit my merchant dashboard (/merchants/:merchant_id/dashboard)
+        # Then I see a section for "Items Ready to Ship"
+        # In that section I see a list of the names of all of my items that
+        # have been ordered and have not yet been shipped,
+        # And next to each Item I see the id of the invoice that ordered my item
+        # And each invoice id is a link to my merchant's invoice show page
+      it "shows section for 'Items Ready to Ship'" do
+        visit "/merchants/#{merchant_1.id}/dashboard"
+        expect(page).to have_content("Items Ready to Ship")
+      end
+      it "shows list of names of all items ordered but not shipped in 'Items Ready to ship'" do
+        visit "/merchants/#{merchant_1.id}/dashboard"
+        pending_items = [item_1.name, item_2.name, item_3.name]
+        expect(page).to have_content(pending_items)
+
+      end
+      it "shows invoice id next to items not shipped with link to merchants invoice show page" do
+        visit "/merchants/#{merchant_1.id}/dashboard"
+
       end
     end
   end
