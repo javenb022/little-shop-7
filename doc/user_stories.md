@@ -46,7 +46,7 @@ conducted with my merchant
 ```
 
 ```
-4. Merchant Dashboard Items Ready to Ship
+4. Merchant Dashboard Items Ready to Ship.
 
 As a merchant
 When I visit my merchant dashboard (/merchants/:merchant_id/dashboard)
@@ -421,7 +421,7 @@ Then I see the total revenue that will be generated from this invoice.
 ```
 36. Admin Invoice Show Page: Update Invoice Status
 
-As an admin     
+As an admin
 When I visit an admin invoice show page (/admin/invoices/:invoice_id)
 I see the invoice status is a select field
 And I see that the invoice's current status is selected
@@ -469,7 +469,7 @@ This photo should update to a new random photo each time the page is refreshed.
 
 As a visitor or an admin user
 When I visit any page on the site
-I see that next to the app logo is the number of likes that image has. 
+I see that next to the app logo is the number of likes that image has.
 
-Note: Communicate with your teammate that is working on the first API story to make sure you're gathering statistics for the same image that they're displaying as the logo. 
+Note: Communicate with your teammate that is working on the first API story to make sure you're gathering statistics for the same image that they're displaying as the logo.
 ```
