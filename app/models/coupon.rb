@@ -9,4 +9,8 @@ class Coupon < ApplicationRecord
 
   enum status: {"disabled": 0, "activated": 1}
   enum coupon_type: {"percent": 0, "dollar": 1}
+
+  def uses
+    invoices.where(status: 2, coupon_id: self.id).count
+  end
 end
