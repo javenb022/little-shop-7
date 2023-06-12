@@ -13,4 +13,12 @@ class Coupon < ApplicationRecord
   def uses
     invoices.where(status: 2, coupon_id: self.id).count
   end
+
+  def self.activated_coupons
+    self.where(status: 1)
+  end
+
+  def self.disabled_coupons
+    self.where(status: 0)
+  end
 end
