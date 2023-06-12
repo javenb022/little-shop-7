@@ -10,6 +10,7 @@ class CouponsController < ApplicationController
 
   def show
     @coupon = Coupon.find(params[:id])
+    @merchant = Merchant.find(@coupon.merchant_id)
   end
 
   def create
@@ -23,6 +24,20 @@ class CouponsController < ApplicationController
     else
       redirect_to new_merchant_coupon_path(@merchant)
       flash[:alert] = "Please fill out all fields"
+    end
+  end
+
+  def update
+    coupon = Coupon.find(params[:id])
+    if params[:status] == "0"
+      coupon.update(status: 0)
+      redirect_to merchant_coupon_path(coupon.merchant_id, coupon)
+    elsif params[:status] == "1"
+      coupon.update(status: 1)
+      redirect_to merchant_coupon_path(coupon.merchant_id, coupon)
+    else
+      coupon.update(coupon_params)
+      redirect_to merchant_coupon_path(coupon.merchant_id, coupon)
     end
   end
 

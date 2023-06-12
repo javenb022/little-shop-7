@@ -4,6 +4,7 @@ RSpec.describe "Coupons Show Page" do
   before(:each) do
     @merchant_1 = create(:merchant)
     @coupon_1 = @merchant_1.coupons.create!(code: "20OFF", name: "Summer Sale", status: 0, value: 20, coupon_type: 1)
+    @coupon_2 = @merchant_1.coupons.create!(code: "15OFF", name: "Winter Sale", status: 0, value: 15, coupon_type: 1)
     @customer_1 = create(:customer)
 
     @invoice_1 = create(:invoice, status: 2, coupon_id: @coupon_1.id, customer_id: @customer_1.id)
@@ -21,6 +22,36 @@ RSpec.describe "Coupons Show Page" do
       expect(page).to have_content("Coupon Type: #{@coupon_1.coupon_type}")
       expect(page).to have_content("Status: #{@coupon_1.status}")
       expect(page).to have_content("Times Used: #{@coupon_1.uses}")
+
+      expect(page).to_not have_content("Coupon Name: #{@coupon_2.name}")
+      expect(page).to_not have_content("Code: #{@coupon_2.code}")
+    end
+
+    it "has a button to disable the coupon" do
+      @coupon_1.update(status: 1)
+      visit merchant_coupon_path(@merchant_1, @coupon_1)
+
+      expect(page).to have_content("Status: activated")
+      expect(page).to have_button("Disable Coupon")
+
+      click_button "Disable Coupon"
+
+      expect(current_path).to eq(merchant_coupon_path(@merchant_1, @coupon_1))
+      expect(page).to have_content("Status: disabled")
+      expect(page).to have_button("Activate Coupon")
+    end
+
+    it "has a button to activate the coupon" do
+      visit merchant_coupon_path(@merchant_1, @coupon_2)
+
+      expect(page).to have_content("Status: disabled")
+      expect(page).to have_button("Activate Coupon")
+
+      click_button "Activate Coupon"
+
+      expect(current_path).to eq(merchant_coupon_path(@merchant_1, @coupon_2))
+      expect(page).to have_content("Status: activated")
+      expect(page).to have_button("Disable Coupon")
     end
   end
 end
