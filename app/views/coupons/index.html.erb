@@ -1,10 +1,12 @@
 <section id="activated-coupons">
+  <h2>Activated Coupons</h2>
   <% @merchant.coupons.activated_coupons.each do |coupon| %>
     <p><%= link_to "#{coupon.name}", merchant_coupon_path(@merchant.id, coupon.id) %> <%= coupon.value %> <%= coupon.coupon_type %> Off!</p>
   <% end %>
 </section>
 
 <section id="disabled-coupons">
+    <h2>Disabled Coupons</h2>
   <% @merchant.coupons.disabled_coupons.each do |coupon| %>
     <p><%= link_to "#{coupon.name}", merchant_coupon_path(@merchant, coupon) %> <%= coupon.value %> <%= coupon.coupon_type %> Off!</p>
   <% end %>
