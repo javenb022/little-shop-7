@@ -4,3 +4,8 @@
 <p>Coupon Type: <%= @coupon.coupon_type %></p>
 <p>Times Used: <%= @coupon.uses %></p>
 <p>Status: <%= @coupon.status %></p>
+<% if @coupon.status == "activated" %>
+  <p><%= button_to "Disable Coupon", "/merchants/#{@merchant.id}/coupons/#{@coupon.id}?status=0", method: :patch %></p>
+<% else %>
+  <p><%= button_to "Activate Coupon", "/merchants/#{@merchant.id}/coupons/#{@coupon.id}?status=1", method: :patch %></p>
+<% end %>
