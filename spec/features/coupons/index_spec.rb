@@ -16,19 +16,33 @@ RSpec.describe "Coupons Index Page" do
       visit merchant_coupons_path(@merchant_1)
 
       within "#activated-coupons" do
+        expect(page).to have_content("Activated Coupons")
         expect(page).to have_link("#{@coupon_1.name}")
         expect(page).to have_content("#{@coupon_1.value} percent Off!")
         expect(page).to have_link("#{@coupon_4.name}")
         expect(page).to have_content("#{@coupon_4.value} percent Off!")
+
+        expect(page).to_not have_link("#{@coupon_2.name}")
+        expect(page).to_not have_content("#{@coupon_2.value} percent Off!")
+        expect(page).to_not have_link("#{@coupon_3.name}")
+        expect(page).to_not have_content("#{@coupon_3.value} dollar Off!")
+        expect(page).to_not have_link("#{@coupon_5.name}")
+        expect(page).to_not have_content("#{@coupon_5.value} dollar Off!")
       end
 
       within "#disabled-coupons" do
+        expect(page).to have_content("Disabled Coupons")
         expect(page).to have_link("#{@coupon_2.name}")
         expect(page).to have_content("#{@coupon_2.value} percent Off!")
         expect(page).to have_link("#{@coupon_3.name}")
         expect(page).to have_content("#{@coupon_3.value} dollar Off!")
         expect(page).to have_link("#{@coupon_5.name}")
         expect(page).to have_content("#{@coupon_5.value} dollar Off!")
+
+        expect(page).to_not have_content("Activated Coupons")
+        expect(page).to_not have_link("#{@coupon_1.name}")
+        expect(page).to_not have_content("#{@coupon_1.value} percent Off!")
+        expect(page).to_not have_link("#{@coupon_4.name}")
       end
     end
 
