@@ -14,6 +14,23 @@ class Invoice < ApplicationRecord
     Invoice.joins(:invoice_items).where("invoice_items.status != ?", 1).order(created_at: :asc, id: :asc).distinct
   end
 
+  def grand_total
+    subtotal = revenue
+    if coupon.present? && coupon.activated?
+      revenue - coupon_discount(subtotal)
+    else
+      revenue
+    end
+  end
+
+  def coupon_discount(subtotal)
+    if coupon.percent?
+      subtotal * (coupon.value / 100.0)
+    else
+      coupon.value
+    end
+  end
+
   #instance methods
   def revenue
     invoice_items.sum("unit_price * quantity")
