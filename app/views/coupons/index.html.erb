@@ -13,5 +13,12 @@
 </section>
 
 <section>
+  <h2>Upcoming Holidays</h2>
+  <p><%= @holidays_3.name1 %> - <%= @holidays_3.date1 %></p>
+  <p><%= @holidays_3.name2 %> - <%= @holidays_3.date2 %></p>
+  <p><%= @holidays_3.name3 %> - <%= @holidays_3.date3 %></p>
+</section>
+
+<section>
   <%= link_to "Create New Coupon", new_merchant_coupon_path(@merchant.id) %>
 </section>

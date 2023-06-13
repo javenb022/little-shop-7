@@ -1,6 +1,7 @@
 class CouponsController < ApplicationController
   def index
     @merchant = Merchant.find(params[:merchant_id])
+    @holidays_3 = HolidayBuilder.holiday_info
   end
 
   def new
@@ -32,11 +33,8 @@ class CouponsController < ApplicationController
     if params[:status] == "0"
       coupon.update(status: 0)
       redirect_to merchant_coupon_path(coupon.merchant_id, coupon)
-    elsif params[:status] == "1"
-      coupon.update(status: 1)
-      redirect_to merchant_coupon_path(coupon.merchant_id, coupon)
     else
-      coupon.update(coupon_params)
+      coupon.update(status: 1)
       redirect_to merchant_coupon_path(coupon.merchant_id, coupon)
     end
   end

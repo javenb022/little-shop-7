@@ -60,10 +60,8 @@ RSpec.describe "/merchants/:merchant_id/items" do
       let!(:item_11) { create(:item, merchant_id: merchant_2.id, status: 0)}
       let!(:item_12) { create(:item, merchant_id: merchant_1.id, status: 0)}
 
-      # User Story 6 - Merchant Items Index Page
 
       it "displays a list of names of all that merchants items" do
-        # visit "/merchants/#{merchant_1.id}/items"
         visit merchant_items_path(merchant_1)
 
         within ".enabled-items" do
@@ -72,13 +70,11 @@ RSpec.describe "/merchants/:merchant_id/items" do
           expect(page).to have_content(item_3.name)
           expect(page).to have_content(item_4.name)
           expect(page).to have_content(item_5.name)
-
           expect(page).to_not have_content(item_11.name)
         end
 
-        # visit "/merchants/#{merchant_2.id}/items"
         visit merchant_items_path(merchant_2)
-      
+
         within ".disabled-items" do
           expect(page).to have_content(item_11.name)
           expect(page).to_not have_content(item_1.name)
@@ -89,17 +85,15 @@ RSpec.describe "/merchants/:merchant_id/items" do
         end
       end
 
-      # User Story 7 - Merchant Items Show Page (links from index)
-
       it "links to the items show page when I click on the item name" do
         visit merchant_items_path(merchant_1)
+
         within ".enabled-items" do
           click_link "#{item_1.name}"
         end
 
-          expect(current_path).to eq(merchant_item_path(merchant_1, item_1))
-
-          expect(current_path).to_not eq(merchant_item_path(merchant_1, item_2))
+        expect(current_path).to eq(merchant_item_path(merchant_1, item_1))
+        expect(current_path).to_not eq(merchant_item_path(merchant_1, item_2))
 
         visit merchant_items_path(merchant_1)
 
@@ -108,8 +102,6 @@ RSpec.describe "/merchants/:merchant_id/items" do
         end
         expect(current_path).to eq(merchant_item_path(merchant_1, item_12))
       end
-
-      # User Story 9/10 - Merchant Item Disable/Enable
 
       it "displays a button that will enable or disable each item" do
         visit merchant_items_path(merchant_1)
@@ -142,7 +134,6 @@ RSpec.describe "/merchants/:merchant_id/items" do
           expect(page).to_not have_button("Disable #{item_3.name}")
 
           click_button "Enable #{item_12.name}"
-
         end
 
         within ".enabled-items" do
@@ -154,29 +145,12 @@ RSpec.describe "/merchants/:merchant_id/items" do
         end
       end
 
-      # User Story 11 - Merchant Item Create (link)
-
       it "has a link to create a new item" do
-
         visit merchant_items_path(merchant_1)
 
         click_link "Create New Item"
         expect(current_path).to eq(new_merchant_item_path(merchant_1))
       end
-
-    #  User Story 12 - Merchant Items Index: 5 most popular items
-    #   As a merchant
-    #   When I visit my items index page
-    #   Then I see the names of the top 5 most popular items ranked by total revenue generated
-    #   And I see that each item name links to my merchant item show page for that item
-    #   And I see the total revenue generated next to each item name
-
-    #   Notes on Revenue Calculation:
-
-    #   Only invoices with at least one successful transaction should count towards revenue
-    #   Revenue for an invoice should be calculated as the sum of the revenue of all invoice items
-    #   Revenue for an invoice item should be calculated as the invoice item unit price multiplied
-    #   by the quantity (do not use the item unit price)
 
       it "displays the top 5 most popular items ranked by total revenue for the one merchant" do
         visit merchant_items_path(merchant_1)
@@ -202,7 +176,6 @@ RSpec.describe "/merchants/:merchant_id/items" do
 
         visit merchant_items_path(merchant_1)
 
-
         within ".top-five-items" do
           expect(page).to have_link("#{item_1.name}")
           expect(page).to have_link("#{item_2.name}")
@@ -218,14 +191,6 @@ RSpec.describe "/merchants/:merchant_id/items" do
         expect(current_path).to eq(merchant_item_path(merchant_1, item_1))
       end
 
-      # 13. Merchant Items Index: Top Item's Best Day
-
-      # As a merchant
-      # When I visit my items index page
-      # Then next to each of the 5 most popular items I see the date with the most sales for each item.
-      # And I see a label “Top selling date for <item name> was <date with most sales>"
-
-      # Note: use the invoice date. If there are multiple days with equal number of sales, return the most recent day.
       it "displays the date with most sales for each item next to each of the 5 most popular items" do
 
         visit merchant_items_path(merchant_1)
