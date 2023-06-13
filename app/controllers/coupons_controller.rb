@@ -30,11 +30,14 @@ class CouponsController < ApplicationController
 
   def update
     coupon = Coupon.find(params[:id])
-    if params[:status] == "0"
-      coupon.update(status: 0)
+    if Coupon.five_coupons_activated?
+      flash[:alert] = "You can only have 5 coupons activated at a time"
+      redirect_to merchant_coupon_path(coupon.merchant_id, coupon)
+    elsif params[:status] == "1"
+      coupon.update(status: 1)
       redirect_to merchant_coupon_path(coupon.merchant_id, coupon)
     else
-      coupon.update(status: 1)
+      coupon.update(status: 0)
       redirect_to merchant_coupon_path(coupon.merchant_id, coupon)
     end
   end
