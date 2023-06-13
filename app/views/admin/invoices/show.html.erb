@@ -17,7 +17,13 @@
     <%= form.submit "Update Status" %>
   <% end %>
   <p>Created on: <%= @invoice.created_at.to_datetime.strftime("%A, %B %d, %Y") %></p>
-  <p>Revenue: <%= number_to_currency(@invoice.revenue, unit: "$", separator: ".", delimiter: "") %></p>
+  <p>Subtotal: <%= number_to_currency(@invoice.revenue, unit: "$", separator: ".", delimiter: "") %></p>
+  <p>Grand Total (including discounts if applicable): <%= number_to_currency(@invoice.grand_total, unit: "$", separator: ".", delimiter: "") %></p>
+  <% if @invoice.coupon.present? %>
+    <p>Coupon Used: <%= @invoice.coupon.name %> <%= @invoice.coupon.code %></p>
+  <% else %>
+    <p>Coupon Used: No Coupon Used</p>
+  <% end %>
   <p>Customer: <%= @invoice.customer.first_name %> <%= @invoice.customer.last_name %></p>
 </section>
 <section id="item_table">

@@ -9,7 +9,10 @@ RSpec.describe "Admin Invoices Show Page" do
     @merchant_1 = create(:merchant)
     @merchant_2 = create(:merchant)
 
-    @invoice_1 = create(:invoice, customer_id: @customer1.id)
+    @coupon_1 = @merchant_1.coupons.create!(code: "20OFF", name: "Summer Sale", status: 1, value: 20, coupon_type: 1)
+    @coupon_2 = @merchant_1.coupons.create!(code: "15OFF", name: "Winter Sale", status: 1, value: 15, coupon_type: 0)
+
+    @invoice_1 = create(:invoice, customer_id: @customer1.id, coupon_id: @coupon_1.id)
     @invoice_2 = create(:invoice, customer_id: @customer2.id)
 
     @item_1 = create(:item, merchant_id: @merchant_1.id)
@@ -36,6 +39,7 @@ RSpec.describe "Admin Invoices Show Page" do
       # expect(page).to_not have_content(@invoice_2.formatted_time)
       expect(page).to_not have_content(@invoice_2.customer.first_name)
       expect(page).to_not have_content(@invoice_2.customer.last_name)
+
       within("#invoice_info") do
         expect(page).to have_content("#{@invoice_1.status}")
         expect(page).to have_content("Created on: #{@invoice_1.created_at.to_datetime.strftime("%A, %B %d, %Y")}")
@@ -79,14 +83,31 @@ RSpec.describe "Admin Invoices Show Page" do
     it "displays the total revenue for an invoice" do
       visit admin_invoice_path(@invoice_1)
       within("#invoice_info") do
-        expect(page).to have_content("Revenue: $#{sprintf('%.2f', @invoice_1.revenue)}")
+        expect(page).to have_content("Subtotal: $#{sprintf('%.2f', @invoice_1.revenue)}")
       end
 
       visit admin_invoice_path(@invoice_2)
 
       within("#invoice_info") do
-        expect(page).to have_content("Revenue: $#{sprintf('%.2f', @invoice_2.revenue)}")
+        expect(page).to have_content("Subtotal: $#{sprintf('%.2f', @invoice_2.revenue)}")
       end
+    end
+
+    it "displays the coupon used and discounted grand total" do
+      visit admin_invoice_path(@invoice_1)
+
+      expect(page).to have_content("Grand Total (including discounts if applicable): $#{sprintf('%.2f', @invoice_1.grand_total)}")
+      expect(page).to have_content("Coupon Used: #{@coupon_1.name} #{@coupon_1.code}")
+      expect(page).to_not have_content("Coupon Used: #{@coupon_2.name} #{@coupon_2.code}")
+    end
+
+    it "displays no coupon used when no coupon was applied to an invoice" do
+      visit admin_invoice_path(@invoice_2)
+
+      expect(page).to have_content("Grand Total (including discounts if applicable): $#{sprintf('%.2f', @invoice_2.grand_total)}")
+      expect(page).to have_content("Coupon Used: No Coupon Used")
+      expect(page).to_not have_content("Coupon Used: #{@coupon_1.name} #{@coupon_1.code}")
+      expect(page).to_not have_content("Coupon Used: #{@coupon_2.name} #{@coupon_2.code}")
     end
 
     describe "Admin Invoice Show Page - Update Invoice Status" do
