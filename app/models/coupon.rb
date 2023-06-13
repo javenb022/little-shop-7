@@ -1,6 +1,7 @@
 class Coupon < ApplicationRecord
   belongs_to :merchant
   has_many :invoices
+  has_many :transactions, through: :invoices
 
   validates_presence_of :name, :code, :status, :coupon_type
   validates :code, uniqueness: { case_sensitive: false }
@@ -11,7 +12,7 @@ class Coupon < ApplicationRecord
   enum coupon_type: {"percent": 0, "dollar": 1}
 
   def uses
-    invoices.where(status: 2, coupon_id: self.id).count
+    transactions.where(result: 0, invoices: {coupon_id: self.id}).count
   end
 
   def self.activated_coupons
@@ -20,5 +21,9 @@ class Coupon < ApplicationRecord
 
   def self.disabled_coupons
     self.where(status: 0)
+  end
+
+  def self.five_coupons_activated?
+    self.all.where(status: 1).count == 5
   end
 end
